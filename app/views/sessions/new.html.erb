@@ -1,0 +1,11 @@
+<form id="events">
+	<block>
+		<prompt>
+		<% if @callerid %>
+			Caller ID is <%= @callerid %>.
+		<% else %>
+			Caller ID is unavailable.
+		<% end %>
+		</prompt>
+	</block>
+</form>

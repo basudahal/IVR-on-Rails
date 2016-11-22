@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<grammar root="MONTH" mode="dtmf">
+
+	<rule id="MONTH" scope="public">
+		<one-of>
+			<item>
+				<item>0</item>
+				<ruleref uri="#_digit_nozero" type="application/srgs+xml"/>
+				<tag>$ = $$</tag>
+			</item>
+			<item>
+				<item>1 0</item>
+				<tag>$ = "October"</tag>
+			</item>
+			<item>
+				<item>1 1</item>
+				<tag>$ = "November"</tag>
+			</item>
+			<item>
+				<item>1 2</item>
+				<tag>$ = "December"</tag>
+			</item>
+		</one-of>
+	</rule>
+
+	<rule id="_digit_nozero" scope="private">
+		<one-of>
+			<item>
+				<item>1</item>
+				<tag>$ = "January"</tag>
+			</item>
+			<item>
+				<item>2</item>
+				<tag>$ = "February"</tag>
+			</item>
+			<item>
+				<item>3</item>
+				<tag>$ = "March"</tag>
+			</item>
+			<item>
+				<item>4</item>
+				<tag>$ = "April"</tag>
+			</item>
+			<item>
+				<item>5</item>
+				<tag>$ = "May"</tag>
+			</item>
+			<item>
+				<item>6</item>
+				<tag>$ = "June"</tag>
+			</item>
+			<item>
+				<item>7</item>
+				<tag>$ = "July"</tag>
+			</item>
+			<item>
+				<item>8</item>
+				<tag>$ = "August"</tag>
+			</item>
+			<item>
+				<item>9</item>
+				<tag>$ = "September"</tag>
+			</item>
+		</one-of>
+	</rule>
+	
+</grammar>

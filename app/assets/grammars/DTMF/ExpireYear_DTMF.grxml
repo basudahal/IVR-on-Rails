@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!--
+  This grammar is for a 2 digit year.  I will return the 4 digit value... if 15 is enterered, it returns 2014.  It supports years from 2010 to 2030.
+-->
+<grammar root="YEAR" mode="dtmf" >
+	<rule id="YEAR" scope="public">
+    <one-of>
+      <item>
+        <item>1</item>
+        <tag>$ = "201"</tag>
+      </item>
+      <item>
+        <item>2</item>
+        <tag>$ = "202"</tag>
+      </item>
+    </one-of>
+    <item>
+      <ruleref uri="#_digit" type="application/srgs+xml"/>
+      <tag>$ = $ + $$</tag>
+    </item>        		
+	</rule>
+
+	<rule id="_digit" scope="private">
+		<one-of>
+      <item>
+        <item>0</item>
+        <tag>$ = "0"</tag>
+      </item>
+			<item>
+				<item>1</item>
+				<tag>$ = "1"</tag>
+			</item>
+			<item>
+				<item>2</item>
+				<tag>$ = "2"</tag>
+			</item>
+			<item>
+				<item>3</item>
+				<tag>$ = "3"</tag>
+			</item>
+			<item>
+				<item>4</item>
+				<tag>$ = "4"</tag>
+			</item>
+			<item>
+				<item>5</item>
+				<tag>$ = "5"</tag>
+			</item>
+			<item>
+				<item>6</item>
+				<tag>$ = "6"</tag>
+			</item>
+			<item>
+				<item>7</item>
+				<tag>$ = "7"</tag>
+			</item>
+			<item>
+				<item>8</item>
+				<tag>$ = "8"</tag>
+			</item>
+			<item>
+				<item>9</item>
+				<tag>$ = "9"</tag>
+			</item>
+		</one-of>
+	</rule>
+		
+</grammar>
