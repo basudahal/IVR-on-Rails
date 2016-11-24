@@ -1,0 +1,31 @@
+<form id="eventDetail">
+	<field name="reg">
+		<prompt>
+			You have selected to register for event <%= @event.name %> in <%= @event.location %>.
+			If that is correct press 1 otherwise press 2.
+		</prompt>
+		<option dtmf="1" value="yes"/>
+		<option dtmf="2" value="no"/>
+		<filled>
+			<if cond="reg=='yes'">
+				<goto next="#suc"/>
+			<elseif cond="reg=='no'"/>
+				<submit next="<%= root_path %>"/>
+			</if>
+		</filled>
+		<noinput>
+			<reprompt/>
+		</noinput>
+		<nomatch>
+			<reprompt/>
+		</nomatch>
+	</field>
+</form>
+<form id="suc">
+	<block>
+		<prompt>
+			You are registered for the event. We will see you at the event. Goodbye!
+		</prompt>
+		<disconnect/>
+	</block>
+</form>

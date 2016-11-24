@@ -24,7 +24,42 @@
 ]]>
 </script>
 <var name="btn" />
-<form id="GetBTN">          
+<var name="event"/>
+<var name="price"/>
+<form id="topmenu">
+	<field name="top">
+		<prompt>
+			Please select one of the option from the main menu. <break/> To list events press 1, to register for an event press 2, to repeat these options again press 3.
+		</prompt>
+        <option dtmf="1" value="List"/>
+        <option dtmf="2" value="Register" />
+        <option dtmf="3" value="RepeatMenu" />
+        <filled>
+        	<if cond="top == 'List'">
+        		<goto next="#mainmenu"/>
+        	<elseif cond="top == 'Register'"/>
+        		<goto next="#register"/>
+        	<elseif cond="top == 'RepeatMenu'"/>
+        		<clear/>
+        	</if>
+        </filled>
+	</field>
+</form>
+<form id="mainmenu">
+	<block>
+		<prompt>
+			Welcome to Event Reservation System. <break/>
+			Currently there are <%= @events.size %> events.
+		</prompt>
+		<% @events.each do |event| %>
+		<prompt>
+			Event: <%= event.name %> in <%= event.location %> and the price for event is <%= number_to_currency(event.price) %>. <break/>
+		</prompt>
+		<% end %>
+		<goto next="#topmenu"/>
+	</block>
+</form>
+<form id="register">          
     <field name="btnField">
         <property name="inputmodes" value="dtmf" />
 			<grammar root="PHONEDIGITS" mode="dtmf">
@@ -52,7 +87,7 @@
 			  </rule>
 			</grammar>    
         <prompt>
-             Starting with the area code, please enter the 10 digit phone number for your account. 
+            Before proceeding to registration we need some information from you. Starting with the area code, please enter or say the 10 digit phone number for your account. 
             <!--<audio src="@VoiceFiles.GetVoiceFilePath(Model, VoiceFiles.CustomerAccount._18000_EnterPhoneNumber)" />    -->         
         </prompt>                 
         <filled>
@@ -62,7 +97,47 @@
     </field>
 </form>
 <form id="ConfirmBTN">        
-    <field name="confirmField">          
+    <field name="confirmField">
+		<grammar root="YESNOVOICE" xml:lang="en-US" version="1.0" xmlns="http://www.w3.org/2001/06/grammar" mode="voice" xmlns:sapi="http://schemas.microsoft.com/Speech/2002/06/SRGSExtensions" tag-format="semantics-ms/1.0">	
+			<rule id="YESNOVOICE" scope="public">
+				<one-of>
+					<item>
+						<ruleref uri="#YES"/>
+						<tag> $ = "Yes" </tag>
+					</item>
+					<item>
+						<ruleref uri="#NO"/>
+						<tag> $ = "No" </tag>
+					</item>
+				</one-of>
+			</rule>			
+			<rule id="YES">
+				<one-of>
+					<item> yes </item>
+					<item> yea  </item>
+					<item> uh huh </item>
+					<item> yup </item>
+					<item> yep </item>
+					<item> sure </item>
+					<item> O. K. </item>
+					<item> oh kay </item>
+					<item> yeppers </item>
+				</one-of>
+			</rule>
+			
+			<rule id="NO">
+				<one-of>
+					<item> no </item>
+					<item> nope </item>
+					<item> nuh uh </item>
+					<item> nagh </item>
+					<item> na </item>
+					<item> no thanks </item>
+					<item> no way </item>
+					<item> not </item>
+				</one-of>
+			</rule>
+		</grammar>          
         <prompt>        
              I heard:    
             <!--<audio src="@VoiceFiles.GetVoiceFilePath(Model, VoiceFiles.CustomerAccount._18050_ConfirmBTN_1)" /> -->                        
@@ -78,32 +153,34 @@
                     <value expr="lastFour(btn)"/>
                 </say-as>        
             <break />                        
-             If that is the right phone number for your account, press 1.  Or, to give us a different phone number, press 2.        
+             If that is the correct, say Yes or press 1. If not say No or press 2.        
             <!--<audio src="@VoiceFiles.GetVoiceFilePath(Model, VoiceFiles.CustomerAccount._18050_ConfirmBTN_2)" />-->                 
         </prompt>       
         <option dtmf="1" value="Yes"/>
         <option dtmf="2" value="No"/>                    
         <filled>
-            <if cond="confirmField == 'No'">                                                                            
+            <if cond="confirmField == 'No'">                                                                         
                 <goto next="#GetBTN" />                               
             <else />
-               <submit next="#mainmenu" namelist="btn"/>      
+               <submit next="#registerEvent" namelist="btn"/>      
             </if>
         </filled>  
     </field>           
 </form>
-<form id="mainmenu">
-	<block>
+<menu id="registerEvent">
 		<prompt>
-			Your number is <say-as interpret-as="digits"><value expr="btn"/></say-as>. Welcome to Event Reservation System. 
-
-			Currently there are <%= @events.size %> events.
+			Please enter the event ID to register for that event:
 		</prompt>
 		<% @events.each do |event| %>
 		<prompt>
-			Event: <%= event.name %> in <%= event.location %> and the price for event is <%= number_to_currency(event.price) %>.
+			Press  <%= event.id %> for  <%= event.name %> in <%= event.location %> <break/>
 		</prompt>
+		<choice dtmf="<%= event.id %>" next="/events/<%= event.id %>"/>
 		<% end %>
-		<goto next="#GetBTN"/>
-	</block>
-</form>
+		<noinput>
+			<reprompt/>
+		</noinput>
+		<nomatch>
+			<reprompt/>
+		</nomatch>
+</menu>
